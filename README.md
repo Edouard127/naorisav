@@ -6,9 +6,9 @@
 This is an antivirus interface. The current functionalities are limited to matching file names. Any type of signature based or heuristic analysis would need to be implemented in the program.  
 
 ## Other things you may find eductional in this project:    
-Threading    
-QGraphics framework and animation  
-Windows UAC  
-Dialogs  
-Signals & Slots  
+* Threading    
+* QGraphics framework and animation  
+* Windows UAC  
+* Dialogs  
+* Signals & Slots  
 
