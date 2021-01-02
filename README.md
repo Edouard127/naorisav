@@ -8,7 +8,7 @@ This is an antivirus interface. The current functionalities are limited to match
 ## How to run the program  
 Start Qt in administrator mode by right clicking your Qt shortcut/icon and select run as administrator. You will most likely get a permissions error in the console and the program will not run if you do not start Qt with administrator privileges. Select File->Open FIle or Project.. and navigate to the GenomeAntivirus.pro file. The program should run now.
 
-## Other things you may find eductional in this project      
+## Other things you may find educational in this project      
 * Threading    
 * QGraphics framework and animation  
 * Windows UAC  
