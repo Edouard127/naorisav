@@ -12,6 +12,9 @@
 #include "singlescanthread.h"
 #include <QPainter>
 #include<QDebug>
+#include <iostream>
+using namespace std;
+
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -123,6 +126,8 @@ void MainWindow::on_scanSingleFile_clicked() {
 
                 QString line = in.readLine();
                 virusList << line;
+                int line2 = line.toInt();
+                cout << line2 << endl;
             }
 
             inputFile.close();
@@ -155,7 +160,7 @@ void MainWindow::on_scanDirectory_clicked() {
     stopMouseMovement = true;
     if(!checkTextOne){
 
-        QString file = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        QString file = QFileDialog::getExistingDirectory(this, tr("Sélectionnez un dossier"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         ui->listWidget->clear();
         QStringList list;
         list<< file;
@@ -220,7 +225,7 @@ void MainWindow::handleScanComplete() {
     ui->label_2->show();
 
     if(ui->listWidget->count()== 0){
-        ui->listWidget->addItem("No Threats Detected");
+        ui->listWidget->addItem("Aucun virus détecté");
     }
 }
 
@@ -270,7 +275,7 @@ void MainWindow::on_removeSelectedFile_clicked() {
         //QFile::setPermissions(ui->listWidget->currentItem()->text(),QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner);
         QFile::remove(fileToRemove);
         ui->listWidget->takeItem(ui->listWidget->currentRow());
-        ui->listWidget->addItem("Item successfully removed");
+        ui->listWidget->addItem("Suprimé");
     }
 }
 
@@ -308,7 +313,7 @@ void MainWindow::on_removeAllFiles_clicked() {
         }
 
         ui->listWidget->clear();
-        ui->listWidget->addItem("All item successfully removed");
+        ui->listWidget->addItem("La sélection a été suprimé");
     }
 }
 

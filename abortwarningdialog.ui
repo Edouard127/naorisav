@@ -29,7 +29,7 @@
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Yes</string>
+    <string>Oui</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_2">
@@ -45,7 +45,7 @@
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>No</string>
+    <string>Non</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -71,7 +71,7 @@
 font: 14pt &quot;a•space&quot;;</string>
    </property>
    <property name="text">
-    <string>Abort Current Scan?</string>
+    <string>Arreter le scan ?</string>
    </property>
   </widget>
  </widget>

@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Genome Antivirus</string>
+   <string>Naoris AntiVirus</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-image: url(:/images/background.png);
@@ -66,7 +66,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Abort Scan</string>
+     <string>Annuler</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -75,7 +75,7 @@ border-color: rgb(0, 0, 0);
       <x>30</x>
       <y>0</y>
       <width>100</width>
-      <height>51</height>
+      <height>100</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -118,7 +118,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Scan Directory</string>
+     <string>Scan Dossier</string>
     </property>
    </widget>
    <widget class="QPushButton" name="removeSelectedFile">
@@ -153,7 +153,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Remove Selected</string>
+     <string>Retirer sélection</string>
     </property>
    </widget>
    <widget class="QPushButton" name="removeAllFiles">
@@ -179,7 +179,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Remove All</string>
+     <string>Tout retirer</string>
     </property>
    </widget>
    <widget class="QPushButton" name="smartScanButton">
@@ -202,7 +202,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Run Smart Scan</string>
+     <string>Scan rapide</string>
     </property>
    </widget>
    <widget class="QPushButton" name="scanSingleFile">
@@ -225,7 +225,7 @@ border-color: rgb(0, 0, 0);
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Scan Single File</string>
+     <string>Scan fichier</string>
     </property>
    </widget>
   </widget>

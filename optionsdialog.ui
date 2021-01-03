@@ -55,7 +55,7 @@ font: 16pt &quot;a•space&quot;;</string>
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Close</string>
+    <string>Fermer</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox">
@@ -79,7 +79,7 @@ font: 16pt &quot;a•space&quot;;</string>
 color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Boot Time Scan</string>
+    <string>Scan démarrage</string>
    </property>
   </widget>
  </widget>

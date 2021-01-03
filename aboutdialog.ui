@@ -36,7 +36,7 @@
 </string>
    </property>
    <property name="text">
-    <string>close</string>
+    <string>fermer</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -64,7 +64,7 @@ font: 15pt &quot;a•space&quot;;
 background-image: url(:/images/background.png);</string>
    </property>
    <property name="text">
-    <string>Genome Antivirus </string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -85,14 +85,14 @@ background-image: url(:/images/background.png);</string>
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Version: 1.0.1</string>
+    <string>Version: 0.0.3</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>20</y>
+     <y>70</y>
      <width>261</width>
      <height>31</height>
     </rect>
@@ -112,7 +112,7 @@ font: 20pt &quot;MS Shell Dlg 2&quot;;
 font: 20pt &quot;a•space&quot;;</string>
    </property>
    <property name="text">
-    <string>Equati0n Labs</string>
+    <string>     Naoris Antivirus</string>
    </property>
   </widget>
  </widget>

@@ -4,7 +4,7 @@
 LogoAnimation::LogoAnimation(QGraphicsItem *parent): QGraphicsItem(parent) ,mCurrentFrame7() {
 
     setFlag(ItemClipsToShape);
-    mPixmap7 = QPixmap(":images/dna-sprite2.png");
+
     //QTimer *timer = new QTimer(this);
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(nextFrame()));

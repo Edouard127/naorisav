@@ -55,7 +55,7 @@
 font: 14pt &quot;a•space&quot;;</string>
    </property>
    <property name="text">
-    <string>Scan is currently in progress</string>
+    <string>Il y a un scan en progres</string>
    </property>
   </widget>
  </widget>
