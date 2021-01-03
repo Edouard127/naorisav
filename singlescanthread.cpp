@@ -16,7 +16,6 @@ SingleScanThread::SingleScanThread(QStringList list, QString fileToScan,QString 
   ,location(fileLocation)
 
 {
-cout << fileLocation.toStdString() << endl;
 cout << fileToScan.toStdString() << endl;
 QFile file(fileLocation);
 
@@ -35,15 +34,13 @@ QFile file(fileLocation);
     if (lireFichier.is_open())
     {
 
-        std::cout << "fichier ouvert" << std::endl;
-
         std::string ligne;
 
         while (getline(lireFichier, ligne))
         {
-            if (hashData.toStdString() == ligne.c_str())
+            if (hashData.toHex() == ligne.c_str())
             {
-                std::cout << "OK";
+                cout << "Virus" << endl;
             }
         }
     }
