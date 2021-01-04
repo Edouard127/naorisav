@@ -12,9 +12,7 @@
 #include "singlescanthread.h"
 #include <QPainter>
 #include<QDebug>
-#include <iostream>
-using namespace std;
-
+#include <QCryptographicHash>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -96,8 +94,8 @@ void MainWindow::on_smartScanButton_clicked() {
         if(checkTextTwo){
             delete textTwo;
             checkTextTwo = false;
-        }
-        }
+          }
+       }
     }
     else{
 
@@ -116,6 +114,19 @@ void MainWindow::on_scanSingleFile_clicked() {
         QString file = QFileDialog::getOpenFileName(this, tr("Select Directory"), "C:/");
         QFileInfo fi(file);
         QString name = fi.fileName();
+        QFile fileLocation(file);
+        QByteArray hashData;
+
+        if (fileLocation.open(QIODevice::ReadOnly))
+            {
+                QByteArray fileData = fileLocation.readAll();
+
+                hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5); // or QCryptographicHash::Sha1
+                qDebug().noquote() << hashData.toHex();  // 0e0c2180dfd784dd84423b00af86e2fc
+                qDebug() << hashData.toHex();  // 0e0c2180dfd784dd84423b00af86e2fc
+
+            }
+
         //QFile inputFile("C:/Users/Desktop/Genome/viruslist.txt");
         QFile inputFile(":/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
@@ -126,12 +137,10 @@ void MainWindow::on_scanSingleFile_clicked() {
 
                 QString line = in.readLine();
                 virusList << line;
-                int line2 = line.toInt();
-                cout << line2 << endl;
             }
 
             inputFile.close();
-            singleScanThread = new SingleScanThread(virusList,name,file);
+            singleScanThread = new SingleScanThread(virusList,name,file,hashData.toHex());
             connect(singleScanThread, &SingleScanThread::scanStart, this, &MainWindow::handleScanStart);
             connect(singleScanThread, &SingleScanThread::scanComplete, this, &MainWindow::handleScanComplete);
             connect(singleScanThread, &SingleScanThread::infectedFiles, this, &MainWindow::displayInfectedFiles);
@@ -160,7 +169,7 @@ void MainWindow::on_scanDirectory_clicked() {
     stopMouseMovement = true;
     if(!checkTextOne){
 
-        QString file = QFileDialog::getExistingDirectory(this, tr("Sélectionnez un dossier"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        QString file = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         ui->listWidget->clear();
         QStringList list;
         list<< file;
@@ -225,7 +234,7 @@ void MainWindow::handleScanComplete() {
     ui->label_2->show();
 
     if(ui->listWidget->count()== 0){
-        ui->listWidget->addItem("Aucun virus détecté");
+        ui->listWidget->addItem("No Threats Detected");
     }
 }
 
@@ -275,7 +284,7 @@ void MainWindow::on_removeSelectedFile_clicked() {
         //QFile::setPermissions(ui->listWidget->currentItem()->text(),QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner);
         QFile::remove(fileToRemove);
         ui->listWidget->takeItem(ui->listWidget->currentRow());
-        ui->listWidget->addItem("Suprimé");
+        ui->listWidget->addItem("Item successfully removed");
     }
 }
 
@@ -313,7 +322,7 @@ void MainWindow::on_removeAllFiles_clicked() {
         }
 
         ui->listWidget->clear();
-        ui->listWidget->addItem("La sélection a été suprimé");
+        ui->listWidget->addItem("All item successfully removed");
     }
 }
 
