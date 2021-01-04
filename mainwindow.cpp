@@ -13,6 +13,7 @@
 #include <QPainter>
 #include<QDebug>
 #include <QCryptographicHash>
+#include <QDataStream>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -37,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     checkTextOne = false;
     checkTextTwo = false;
     stopMouseMovement = false;
-
 }
 
 MainWindow::~MainWindow() {
@@ -115,17 +115,29 @@ void MainWindow::on_scanSingleFile_clicked() {
         QFileInfo fi(file);
         QString name = fi.fileName();
         QFile fileLocation(file);
-        QByteArray hashData;
 
-        if (fileLocation.open(QIODevice::ReadOnly))
-            {
-                QByteArray fileData = fileLocation.readAll();
+        QByteArray hashDataMd4;
+        QByteArray hashDataMd5;
+        QByteArray hashDataSha1;
+        QByteArray hashDataSha256;
 
-                hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5); // or QCryptographicHash::Sha1
-                qDebug().noquote() << hashData.toHex();  // 0e0c2180dfd784dd84423b00af86e2fc
-                qDebug() << hashData.toHex();  // 0e0c2180dfd784dd84423b00af86e2fc
+        QStringList hashList;
 
-            }
+        //Check to see if file is bigger than 2 GB
+        if(fi.size() > 2147483648){
+             ui->listWidget->addItem("Error: File size exceeded. Maximum file size is 2GB");
+             return;
+        }
+
+        if (fileLocation.open(QIODevice::ReadOnly)){
+            QByteArray fileData = fileLocation.readAll();
+            hashDataMd4 = QCryptographicHash::hash(fileData, QCryptographicHash::Md4).toHex();
+            hashDataMd5 = QCryptographicHash::hash(fileData, QCryptographicHash::Md5).toHex();
+            hashDataSha1 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha1).toHex();
+            hashDataSha256 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha256).toHex();
+            hashList << hashDataMd4 << hashDataMd5 << hashDataSha1 << hashDataSha256;
+            qDebug()  << hashDataMd5;
+        }
 
         //QFile inputFile("C:/Users/Desktop/Genome/viruslist.txt");
         QFile inputFile(":/data/viruslist.txt");
@@ -138,9 +150,9 @@ void MainWindow::on_scanSingleFile_clicked() {
                 QString line = in.readLine();
                 virusList << line;
             }
-
             inputFile.close();
-            singleScanThread = new SingleScanThread(virusList,name,file,hashData.toHex());
+
+            singleScanThread = new SingleScanThread(virusList, name, file, hashList);
             connect(singleScanThread, &SingleScanThread::scanStart, this, &MainWindow::handleScanStart);
             connect(singleScanThread, &SingleScanThread::scanComplete, this, &MainWindow::handleScanComplete);
             connect(singleScanThread, &SingleScanThread::infectedFiles, this, &MainWindow::displayInfectedFiles);
@@ -163,6 +175,8 @@ void MainWindow::on_scanSingleFile_clicked() {
         warningDialog->exec();
     }
 }
+
+
 
 void MainWindow::on_scanDirectory_clicked() {
 
@@ -215,6 +229,9 @@ void MainWindow::on_scanDirectory_clicked() {
 
 void MainWindow::handleScanStart() {
 
+    if(checkTextTwo){
+        delete textTwo;
+    }
     textOne = new StatusOne(QPixmap(":images/textOne"));
     textOne->setPos(80,90);
     scene->addItem(textOne);
@@ -425,3 +442,4 @@ void MainWindow::on_actionClose_hovered() {
 
     stopMouseMovement = true;
 }
+
