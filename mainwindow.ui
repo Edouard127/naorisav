@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>416</height>
+    <width>800</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="font">
@@ -49,8 +49,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="abort">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>334</y>
+      <x>330</x>
+      <y>410</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -90,8 +90,8 @@ border-color: rgb(0, 0, 0);
      <rect>
       <x>20</x>
       <y>174</y>
-      <width>351</width>
-      <height>151</height>
+      <width>481</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -101,8 +101,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="scanDirectory">
     <property name="geometry">
      <rect>
-      <x>443</x>
-      <y>295</y>
+      <x>590</x>
+      <y>330</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -124,8 +124,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="removeSelectedFile">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>334</y>
+      <x>90</x>
+      <y>410</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -159,8 +159,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="removeAllFiles">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>334</y>
+      <x>210</x>
+      <y>410</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -185,8 +185,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="smartScanButton">
     <property name="geometry">
      <rect>
-      <x>443</x>
-      <y>174</y>
+      <x>590</x>
+      <y>209</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -208,8 +208,8 @@ border-color: rgb(0, 0, 0);
    <widget class="QPushButton" name="scanSingleFile">
     <property name="geometry">
      <rect>
-      <x>443</x>
-      <y>235</y>
+      <x>590</x>
+      <y>270</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -226,6 +226,56 @@ border-color: rgb(0, 0, 0);
     </property>
     <property name="text">
      <string>Scan fichier</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>450</y>
+      <width>285</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>446</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(191, 64, 64, 0);</string>
+    </property>
+    <property name="text">
+     <string>Downloading Updates</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>446</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(191, 64, 64, 0);</string>
+    </property>
+    <property name="text">
+     <string>Update Complete</string>
     </property>
    </widget>
   </widget>

@@ -10,7 +10,19 @@
 #include <QObject>
 #include <QFileDialog>
 #include <QStringList>
-#include <QFileInfo>
+
+#include <QtNetwork>
+
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrl>
+#include <QPainter>
+#include <QDebug>
+#include <QCryptographicHash>
+#include <QDataStream>
+#include <QFile>
+#include <QProgressBar>
 
 class LogoAnimation;
 class AboutDialog;
@@ -41,6 +53,9 @@ public slots:
      void handleScanComplete();
      void displayInfectedFiles(QString);
      void stopThread();
+     void replyFinished();
+     void slotReadyRead();
+     void processIncomingData();
 
 private slots:
     void on_abort_clicked();
@@ -109,6 +124,9 @@ private:
     QString *fileName;
     SingleScanThread *singleScanThread;
     bool stopMouseMovement;
+    QNetworkReply *networkResponse;
+    QProgressBar *progressBar;
+    int incomingDataSize;
 
 };
 

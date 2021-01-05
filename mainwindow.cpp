@@ -10,17 +10,12 @@
 #include "warningdialog.h"
 #include "abortwarningdialog.h"
 #include "singlescanthread.h"
-#include <QPainter>
-#include<QDebug>
-#include <QCryptographicHash>
-#include <QDataStream>
-
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
-    setFixedSize(650,416);
+    setFixedSize(800,525);
 
     scene = new QGraphicsScene();
     scene->setSceneRect(0,0,641,171);
@@ -29,15 +24,27 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     threatText = new StatusOne(QPixmap(":images/threatText"));
-    threatText->setPos(140,150);
+    threatText->setPos(215,150);
     scene->addItem(threatText);
 
     mainLogo = new StatusOne(QPixmap(":images/logo2.png"));
-    mainLogo->setPos(140,8);
+    mainLogo->setPos(175,8);
     scene->addItem(mainLogo);
     checkTextOne = false;
     checkTextTwo = false;
     stopMouseMovement = false;
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://virusshare.com/hashfiles/VirusShare_00000.md5"));
+    //request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
+
+    networkResponse = manager->get(request);
+    connect(networkResponse, &QIODevice::readyRead, this, &MainWindow::slotReadyRead);
+    connect(networkResponse, &QNetworkReply::finished, this, &MainWindow::processIncomingData);
+    ui->progressBar->setMinimum(0);
+    ui->label->hide();
+    ui->label_3->hide();
 }
 
 MainWindow::~MainWindow() {
@@ -69,7 +76,7 @@ void MainWindow::on_smartScanButton_clicked() {
         QStringList list;
         list<< "C:/";
 
-        QFile inputFile(":/data/viruslist.txt");
+        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
 
@@ -139,8 +146,8 @@ void MainWindow::on_scanSingleFile_clicked() {
             qDebug()  << hashDataMd5;
         }
 
-        //QFile inputFile("C:/Users/Desktop/Genome/viruslist.txt");
-        QFile inputFile(":/data/viruslist.txt");
+        //There is a viruslist 2 for testing purposes. App is being updated and file written every time currently.
+        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
 
@@ -192,7 +199,7 @@ void MainWindow::on_scanDirectory_clicked() {
             return;
         }
 
-        QFile inputFile(":/data/viruslist.txt");
+        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
 
@@ -218,7 +225,7 @@ void MainWindow::on_scanDirectory_clicked() {
             delete textTwo;
             checkTextTwo = false;
         }
-        }
+      }
     }
     else{
         warningDialog = new WarningDialog();
@@ -245,7 +252,7 @@ void MainWindow::handleScanComplete() {
     delete textOne;
     checkTextOne = false;
     textTwo = new StatusOne(QPixmap(":images/textTwo"));
-    textTwo->setPos(79,92);
+    textTwo->setPos(135,120);
     scene->addItem(textTwo);
     checkTextTwo =  true;
     ui->label_2->show();
@@ -268,6 +275,41 @@ void MainWindow::stopThread() {
     scene->addItem(textTwo);
     checkTextTwo =  true;
     ui->label_2->show();
+}
+
+void MainWindow::replyFinished(){
+    qDebug() << networkResponse;
+}
+
+//Get the data
+void MainWindow::slotReadyRead(){
+
+    incomingDataSize = static_cast<int>(networkResponse->size());
+    ui->label->show();
+}
+
+//Process the data and write to file
+void MainWindow::processIncomingData(){
+    ui->progressBar->setMaximum(incomingDataSize);
+    QFile file("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
+    if (file.open(QIODevice::WriteOnly)){
+        int size = 0;
+        while(size <= incomingDataSize){
+            QTextStream out(&file);
+            out << networkResponse->readLine(15);
+            size += 15;
+            ui->progressBar->setValue(size);
+            if(size >= incomingDataSize){
+                ui->label->hide();
+                ui->label_3->show();
+                qDebug() << ui->progressBar->value();
+                ui->progressBar->setValue(incomingDataSize);
+            }
+        }
+    }else{
+        qDebug() << "File Error";
+        return;
+    }
 }
 
 void MainWindow::on_abort_clicked() {
@@ -304,8 +346,6 @@ void MainWindow::on_removeSelectedFile_clicked() {
         ui->listWidget->addItem("Item successfully removed");
     }
 }
-
-
 
 void MainWindow::on_removeAllFiles_clicked() {
 
