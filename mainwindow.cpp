@@ -34,17 +34,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     checkTextTwo = false;
     stopMouseMovement = false;
 
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
-    request.setUrl(QUrl("https://virusshare.com/hashfiles/VirusShare_00000.md5"));
-    //request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
-
-    networkResponse = manager->get(request);
-    connect(networkResponse, &QIODevice::readyRead, this, &MainWindow::slotReadyRead);
-    connect(networkResponse, &QNetworkReply::finished, this, &MainWindow::processIncomingData);
     ui->progressBar->setMinimum(0);
     ui->label->hide();
     ui->label_3->hide();
+
+    //Timer to download signatures every ten seconds.
+    fileDownloader = new QTimer();
+    connect(fileDownloader, SIGNAL(timeout()), this, SLOT(downloadSignatures()));
+    fileDownloader->start(10000);
 }
 
 MainWindow::~MainWindow() {
@@ -138,16 +137,16 @@ void MainWindow::on_scanSingleFile_clicked() {
 
         if (fileLocation.open(QIODevice::ReadOnly)){
             QByteArray fileData = fileLocation.readAll();
-            hashDataMd4 = QCryptographicHash::hash(fileData, QCryptographicHash::Md4).toHex();
+            //hashDataMd4 = QCryptographicHash::hash(fileData, QCryptographicHash::Md4).toHex();
             hashDataMd5 = QCryptographicHash::hash(fileData, QCryptographicHash::Md5).toHex();
-            hashDataSha1 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha1).toHex();
-            hashDataSha256 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha256).toHex();
-            hashList << hashDataMd4 << hashDataMd5 << hashDataSha1 << hashDataSha256;
+           // hashDataSha1 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha1).toHex();
+            //hashDataSha256 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha256).toHex();
+            hashList <<  hashDataMd5;
             qDebug()  << hashDataMd5;
         }
 
         //There is a viruslist 2 for testing purposes. App is being updated and file written every time currently.
-        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
+        QFile inputFile("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
 
@@ -183,8 +182,6 @@ void MainWindow::on_scanSingleFile_clicked() {
     }
 }
 
-
-
 void MainWindow::on_scanDirectory_clicked() {
 
     stopMouseMovement = true;
@@ -199,7 +196,7 @@ void MainWindow::on_scanDirectory_clicked() {
             return;
         }
 
-        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
+        QFile inputFile("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
 
@@ -246,7 +243,6 @@ void MainWindow::handleScanStart() {
 }
 
 void MainWindow::handleScanComplete() {
-
     delete logo;
     delete gear;
     delete textOne;
@@ -283,21 +279,20 @@ void MainWindow::replyFinished(){
 
 //Get the data
 void MainWindow::slotReadyRead(){
-
     incomingDataSize = static_cast<int>(networkResponse->size());
-    ui->label->show();
+
 }
 
 //Process the data and write to file
 void MainWindow::processIncomingData(){
     ui->progressBar->setMaximum(incomingDataSize);
-    QFile file("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
+    QFile file("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
     if (file.open(QIODevice::WriteOnly)){
         int size = 0;
         while(size <= incomingDataSize){
             QTextStream out(&file);
-            out << networkResponse->readLine(15);
-            size += 15;
+            out << networkResponse->readLine(60);
+            size += 60;
             ui->progressBar->setValue(size);
             if(size >= incomingDataSize){
                 ui->label->hide();
@@ -310,6 +305,15 @@ void MainWindow::processIncomingData(){
         qDebug() << "File Error";
         return;
     }
+}
+
+void MainWindow::downloadSignatures(){
+    ui->label_3->hide();
+    ui->label->show();
+    request.setUrl(QUrl("http://manubrial-hour.000webhostapp.com/viruslist.txt"));
+    networkResponse = manager->get(request);
+    connect(networkResponse, &QIODevice::readyRead, this, &MainWindow::slotReadyRead);
+    connect(networkResponse, &QNetworkReply::finished, this, &MainWindow::processIncomingData);
 }
 
 void MainWindow::on_abort_clicked() {

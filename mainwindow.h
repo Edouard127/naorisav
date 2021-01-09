@@ -23,6 +23,7 @@
 #include <QDataStream>
 #include <QFile>
 #include <QProgressBar>
+#include <QTimer>
 
 class LogoAnimation;
 class AboutDialog;
@@ -56,6 +57,7 @@ public slots:
      void replyFinished();
      void slotReadyRead();
      void processIncomingData();
+     void downloadSignatures();
 
 private slots:
     void on_abort_clicked();
@@ -64,35 +66,19 @@ private slots:
     void on_scanDirectory_clicked();
     void on_actionMinimize_triggered();
     void on_smartScanButton_clicked();
-
     void on_actionClose_triggered();
-
     void on_scanSingleFile_clicked();
-
     void on_removeSelectedFile_clicked();
-
     void on_removeAllFiles_clicked();
-
-
-
     void on_removeSelectedFile_released();
-
     void on_removeAllFiles_released();
-
     void on_abort_released();
-
     void on_smartScanButton_released();
-
     void on_scanSingleFile_released();
-
     void on_scanDirectory_released();
-
     void on_actionOptions_hovered();
-
     void on_actionAbout_hovered();
-
     void on_actionMinimize_hovered();
-
     void on_actionClose_hovered();
 
 signals:
@@ -127,6 +113,9 @@ private:
     QNetworkReply *networkResponse;
     QProgressBar *progressBar;
     int incomingDataSize;
+    QTimer *fileDownloader;
+    QNetworkAccessManager *manager;
+    QNetworkRequest request;
 
 };
 
