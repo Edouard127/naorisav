@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     scene->addItem(threatText);
 
     mainLogo = new StatusOne(QPixmap(":images/logo2.png"));
-    mainLogo->setPos(175,8);
+    mainLogo->setPos(170,8);
     scene->addItem(mainLogo);
     checkTextOne = false;
     checkTextTwo = false;
@@ -50,14 +50,14 @@ MainWindow::~MainWindow() {
 void MainWindow::startAnimation() {
     ui->label_2->close();
     logo = new LogoAnimation();
-    logo->setPos(25, 8);
+    logo->setPos(50, -10);
     scene->addItem(logo);
 }
 
 void MainWindow::startGearAnimation() {
-    gear = new Gear();
-    gear->setPos(330, 60);
-    scene->addItem(gear);
+   // gear = new Gear();
+    //gear->setPos(330, 60);
+    //scene->addItem(gear);
 }
 
 void MainWindow::on_smartScanButton_clicked() {
@@ -84,7 +84,7 @@ void MainWindow::on_smartScanButton_clicked() {
         thread->start();
 
         startAnimation();
-        startGearAnimation();
+        //startGearAnimation();
 
         if(checkTextTwo){
             delete textTwo;
@@ -188,7 +188,7 @@ void MainWindow::on_scanDirectory_clicked(){
         thread->start();
 
         startAnimation();
-        startGearAnimation();
+        //startGearAnimation();
 
         if(checkTextTwo){
             delete textTwo;
@@ -208,14 +208,14 @@ void MainWindow::handleScanStart(){
         delete textTwo;
     }
     textOne = new StatusOne(QPixmap(":images/textOne"));
-    textOne->setPos(80,90);
+    textOne->setPos(295,70);
     scene->addItem(textOne);
     checkTextOne = true;
 }
 
 void MainWindow::handleScanComplete(){
     delete logo;
-    delete gear;
+    //delete gear;
     delete textOne;
     checkTextOne = false;
     textTwo = new StatusOne(QPixmap(":images/textTwo"));
@@ -231,7 +231,7 @@ void MainWindow::handleScanComplete(){
 void MainWindow::stopThread(){
     thread->stopThread = true;
     delete logo;
-    delete gear;
+    //delete gear;
     delete textOne;
     checkTextOne = false;
     textTwo = new StatusOne(QPixmap(":images/textTwo"));

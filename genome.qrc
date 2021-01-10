@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/background.png</file>
         <file>images/logo.png</file>
         <file>images/options.png</file>
         <file>images/about.png</file>
@@ -16,5 +15,7 @@
         <file>images/staticdna.png</file>
         <file>images/logo2.png</file>
         <file>images/dna.png</file>
+        <file>images/spritesheet.png</file>
+        <file>images/background.png</file>
     </qresource>
 </RCC>
