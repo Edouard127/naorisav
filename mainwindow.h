@@ -10,13 +10,6 @@
 #include <QObject>
 #include <QFileDialog>
 #include <QStringList>
-
-#include <QtNetwork>
-
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QUrl>
 #include <QPainter>
 #include <QDebug>
 #include <QCryptographicHash>
@@ -24,6 +17,8 @@
 #include <QFile>
 #include <QProgressBar>
 #include <QTimer>
+#include <QThread>
+#include "updater.h"
 
 class LogoAnimation;
 class AboutDialog;
@@ -53,11 +48,11 @@ public slots:
      void handleScanStart();
      void handleScanComplete();
      void displayInfectedFiles(QString);
-     void stopThread();
-     void replyFinished();
-     void slotReadyRead();
-     void processIncomingData();
+     void stopThread();      
      void downloadSignatures();
+     void updateProgressBar(qint64,qint64);
+     void updateProgressBarF(int);
+     void updateStatus(QString);
 
 private slots:
     void on_abort_clicked();
@@ -110,13 +105,11 @@ private:
     QString *fileName;
     SingleScanThread *singleScanThread;
     bool stopMouseMovement;
-    QNetworkReply *networkResponse;
     QProgressBar *progressBar;
     int incomingDataSize;
     QTimer *fileDownloader;
-    QNetworkAccessManager *manager;
-    QNetworkRequest request;
+    QThread *updateThread;
+    Updater *updater;
 
 };
-
 #endif // MAINWINDOW_H

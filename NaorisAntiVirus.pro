@@ -18,6 +18,7 @@ SOURCES += main.cpp\
     gear.cpp \
     statusone.cpp \
     optionsdialog.cpp \
+    updater.cpp \
     warningdialog.cpp \
     abortwarningdialog.cpp \
     singlescanthread.cpp
@@ -29,6 +30,7 @@ HEADERS  += mainwindow.h \
     gear.h \
     statusone.h \
     optionsdialog.h \
+    updater.h \
     warningdialog.h \
     abortwarningdialog.h \
     singlescanthread.h

@@ -231,7 +231,7 @@ border-color: rgb(0, 0, 0);
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>158</x>
       <y>450</y>
       <width>285</width>
       <height>23</height>
@@ -245,12 +245,15 @@ border-color: rgb(0, 0, 0);
     </property>
    </widget>
    <widget class="QLabel" name="label">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>6</x>
-      <y>446</y>
-      <width>151</width>
-      <height>31</height>
+      <x>40</x>
+      <y>450</y>
+      <width>111</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -264,10 +267,10 @@ background-color: rgba(191, 64, 64, 0);</string>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>446</y>
-      <width>121</width>
-      <height>31</height>
+      <x>60</x>
+      <y>450</y>
+      <width>91</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -276,6 +279,26 @@ background-color: rgba(191, 64, 64, 0);</string>
     </property>
     <property name="text">
      <string>Update Complete</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="install_updates_text">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>52</x>
+      <y>450</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(191, 64, 64, 0);</string>
+    </property>
+    <property name="text">
+     <string>Installing Updates</string>
     </property>
    </widget>
   </widget>

@@ -12,7 +12,6 @@
 #include "singlescanthread.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
     setFixedSize(800,525);
@@ -34,25 +33,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     checkTextTwo = false;
     stopMouseMovement = false;
 
-    manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-    ui->progressBar->setMinimum(0);
     ui->label->hide();
     ui->label_3->hide();
+    ui->install_updates_text->hide();
+    ui->progressBar->setValue(0);
+    ui->progressBar->setMinimum(0);
+    //ui->progressBar->setMaximum(100);
 
-    //Timer to download signatures every ten seconds.
-    fileDownloader = new QTimer();
-    connect(fileDownloader, SIGNAL(timeout()), this, SLOT(downloadSignatures()));
-    fileDownloader->start(10000);
+    downloadSignatures();
 }
 
 MainWindow::~MainWindow() {
-
     delete ui;
 }
 
 void MainWindow::startAnimation() {
-
     ui->label_2->close();
     logo = new LogoAnimation();
     logo->setPos(25, 8);
@@ -60,28 +55,22 @@ void MainWindow::startAnimation() {
 }
 
 void MainWindow::startGearAnimation() {
-
     gear = new Gear();
     gear->setPos(330, 60);
     scene->addItem(gear);
 }
 
 void MainWindow::on_smartScanButton_clicked() {
-
     stopMouseMovement = true;
     if(!checkTextOne){
-
         ui->listWidget->clear();
         QStringList list;
-        list<< "C:/";
-
-        QFile inputFile("/home/voldem0rt/Desktop/naorisav-master/data/viruslist.txt");
+        list << "C:/";
+        QFile inputFile("C:/Program Files/Naoris_Antivirus/signatures/viruslist.txt");
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
-
             QStringList virusList;
             while (!in.atEnd()) {
-
                 QString line = in.readLine();
                 virusList << line;
             }
@@ -104,7 +93,6 @@ void MainWindow::on_smartScanButton_clicked() {
        }
     }
     else{
-
         warningDialog = new WarningDialog();
         warningDialog->setWindowFlags(Qt::FramelessWindowHint);
         warningDialog->exec();
@@ -112,10 +100,8 @@ void MainWindow::on_smartScanButton_clicked() {
 }
 
 void MainWindow::on_scanSingleFile_clicked() {
-
     stopMouseMovement = true;
     if(!checkTextOne){
-
         ui->listWidget->clear();
         QString file = QFileDialog::getOpenFileName(this, tr("Select Directory"), "C:/");
         QFileInfo fi(file);
@@ -126,7 +112,6 @@ void MainWindow::on_scanSingleFile_clicked() {
         QByteArray hashDataMd5;
         QByteArray hashDataSha1;
         QByteArray hashDataSha256;
-
         QStringList hashList;
 
         //Check to see if file is bigger than 2 GB
@@ -134,30 +119,24 @@ void MainWindow::on_scanSingleFile_clicked() {
              ui->listWidget->addItem("Error: File size exceeded. Maximum file size is 2GB");
              return;
         }
-
         if (fileLocation.open(QIODevice::ReadOnly)){
-            QByteArray fileData = fileLocation.readAll();
-            //hashDataMd4 = QCryptographicHash::hash(fileData, QCryptographicHash::Md4).toHex();
+            QByteArray fileData = fileLocation.readAll();           
             hashDataMd5 = QCryptographicHash::hash(fileData, QCryptographicHash::Md5).toHex();
-           // hashDataSha1 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha1).toHex();
+            //hashDataMd4 = QCryptographicHash::hash(fileData, QCryptographicHash::Md4).toHex();
+            //hashDataSha1 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha1).toHex();
             //hashDataSha256 = QCryptographicHash::hash(fileData, QCryptographicHash::Sha256).toHex();
             hashList <<  hashDataMd5;
-            qDebug()  << hashDataMd5;
         }
-
         //There is a viruslist 2 for testing purposes. App is being updated and file written every time currently.
-        QFile inputFile("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
-        if (inputFile.open(QIODevice::ReadOnly)) {
+        QFile inputFile("C:/Program Files/Naoris_Antivirus/signatures/viruslist.txt");
+        if (inputFile.open(QIODevice::ReadOnly)){
             QTextStream in(&inputFile);
-
             QStringList virusList;
-            while (!in.atEnd()) {
-
+            while (!in.atEnd()){
                 QString line = in.readLine();
                 virusList << line;
             }
             inputFile.close();
-
             singleScanThread = new SingleScanThread(virusList, name, file, hashList);
             connect(singleScanThread, &SingleScanThread::scanStart, this, &MainWindow::handleScanStart);
             connect(singleScanThread, &SingleScanThread::scanComplete, this, &MainWindow::handleScanComplete);
@@ -175,34 +154,27 @@ void MainWindow::on_scanSingleFile_clicked() {
         }
     }
     else{
-
         warningDialog = new WarningDialog();
         warningDialog->setWindowFlags(Qt::FramelessWindowHint);
         warningDialog->exec();
     }
 }
 
-void MainWindow::on_scanDirectory_clicked() {
-
+void MainWindow::on_scanDirectory_clicked(){
     stopMouseMovement = true;
     if(!checkTextOne){
-
         QString file = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         ui->listWidget->clear();
         QStringList list;
         list<< file;
-
         if(file.isEmpty()){
             return;
         }
-
-        QFile inputFile("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
-        if (inputFile.open(QIODevice::ReadOnly)) {
+        QFile inputFile("C:/Program Files/Naoris_Antivirus/signatures/viruslist.txt");
+        if (inputFile.open(QIODevice::ReadOnly)){
             QTextStream in(&inputFile);
-
             QStringList virusList;
             while (!in.atEnd()) {
-
                 QString line = in.readLine();
                 virusList << line;
             }
@@ -231,8 +203,7 @@ void MainWindow::on_scanDirectory_clicked() {
     }
 }
 
-void MainWindow::handleScanStart() {
-
+void MainWindow::handleScanStart(){
     if(checkTextTwo){
         delete textTwo;
     }
@@ -242,7 +213,7 @@ void MainWindow::handleScanStart() {
     checkTextOne = true;
 }
 
-void MainWindow::handleScanComplete() {
+void MainWindow::handleScanComplete(){
     delete logo;
     delete gear;
     delete textOne;
@@ -252,16 +223,13 @@ void MainWindow::handleScanComplete() {
     scene->addItem(textTwo);
     checkTextTwo =  true;
     ui->label_2->show();
-
     if(ui->listWidget->count()== 0){
         ui->listWidget->addItem("No Threats Detected");
     }
 }
 
-void MainWindow::stopThread() {
-
+void MainWindow::stopThread(){
     thread->stopThread = true;
-
     delete logo;
     delete gear;
     delete textOne;
@@ -273,50 +241,58 @@ void MainWindow::stopThread() {
     ui->label_2->show();
 }
 
-void MainWindow::replyFinished(){
-    qDebug() << networkResponse;
+void MainWindow::downloadSignatures(){
+    updateThread = new QThread();
+    updater = new Updater();
+    connect(updater, &Updater::currentProgress, this, &MainWindow::updateProgressBar);
+    connect(updater, &Updater::currentProgressFiles, this, &MainWindow::updateProgressBarF);
+    connect(updater, &Updater::state, this, &MainWindow::updateStatus);
+    updater->moveToThread(updateThread);
+    connect(updateThread, &QThread::finished, updater, &QObject::deleteLater);
+    updateThread->start();
 }
 
-//Get the data
-void MainWindow::slotReadyRead(){
-    incomingDataSize = static_cast<int>(networkResponse->size());
-
+void MainWindow::updateProgressBar(qint64 readBytes, qint64 totalBytes ){
+    ui->progressBar->setMaximum(totalBytes);
+    ui->progressBar->setValue(readBytes);
 }
 
-//Process the data and write to file
-void MainWindow::processIncomingData(){
-    ui->progressBar->setMaximum(incomingDataSize);
-    QFile file("C:/Users/Voldem0rt/Desktop/naorisav-master/naorisav-master/data/viruslist.txt");
-    if (file.open(QIODevice::WriteOnly)){
-        int size = 0;
-        while(size <= incomingDataSize){
-            QTextStream out(&file);
-            out << networkResponse->readLine(60);
-            size += 60;
-            ui->progressBar->setValue(size);
-            if(size >= incomingDataSize){
-                ui->label->hide();
-                ui->label_3->show();
-                qDebug() << ui->progressBar->value();
-                ui->progressBar->setValue(incomingDataSize);
-            }
+void MainWindow::updateProgressBarF(int n){
+    ui->progressBar->setValue(n);
+}
+
+void MainWindow::updateStatus(QString state){
+    if(state == "Downloading"){
+        if(ui->label_3->isVisible()){
+            ui->label_3->hide();
         }
-    }else{
-        qDebug() << "File Error";
-        return;
+        if(ui->install_updates_text->isVisible()){
+            ui->install_updates_text->hide();
+        }
+        ui->label->show();
+    }
+    if(state == "Installing"){
+        if(ui->label->isVisible()){
+            ui->label->hide();
+        }
+        if(ui->label_3->isVisible()){
+            ui->label_3->hide();
+        }
+        ui->install_updates_text->show();
+    }
+    if(state == "Complete"){
+        if(ui->label->isVisible()){
+            ui->label->hide();
+        }
+        if(ui->install_updates_text->isVisible()){
+            ui->install_updates_text->hide();
+        }
+        ui->label_3->show();
+
     }
 }
 
-void MainWindow::downloadSignatures(){
-    ui->label_3->hide();
-    ui->label->show();
-    request.setUrl(QUrl("http://manubrial-hour.000webhostapp.com/viruslist.txt"));
-    networkResponse = manager->get(request);
-    connect(networkResponse, &QIODevice::readyRead, this, &MainWindow::slotReadyRead);
-    connect(networkResponse, &QNetworkReply::finished, this, &MainWindow::processIncomingData);
-}
-
-void MainWindow::on_abort_clicked() {
+void MainWindow::on_abort_clicked(){
     stopMouseMovement = true;
     if(checkTextOne){
         abortWarningDialog = new AbortWarningDialog();
@@ -330,19 +306,15 @@ void MainWindow::on_abort_clicked() {
     }
 }
 
-void MainWindow::on_removeSelectedFile_clicked() {
-
+void MainWindow::on_removeSelectedFile_clicked(){
     stopMouseMovement = true;
-    if(ui->listWidget->count()==0) {
-
+    if(ui->listWidget->count()==0){
         return;
     }
-    else if(checkTextOne) {
-
+    else if(checkTextOne){
         return;
     }
     else{
-
         QString fileToRemove = ui->listWidget->currentItem()->text();
         //QFile::setPermissions(ui->listWidget->currentItem()->text(),QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner);
         QFile::remove(fileToRemove);
@@ -351,139 +323,113 @@ void MainWindow::on_removeSelectedFile_clicked() {
     }
 }
 
-void MainWindow::on_removeAllFiles_clicked() {
-
+void MainWindow::on_removeAllFiles_clicked(){
     stopMouseMovement = true;
-    if(ui->listWidget->count()==0) {
-
+    if(ui->listWidget->count()==0){
         return;
     }
-    else if(checkTextOne) {
-
+    else if(checkTextOne){
         return;
     }
     else{
-
         QString allItemsInOneString;
         int items = ui->listWidget->count();
-        for(int i = 0; i < items; i++) {
-
+        for(int i = 0; i < items; i++){
             allItemsInOneString += ui->listWidget->item(i)->text();
         }
-
         QStringList allItemsAsAList;
         int itemsList = ui->listWidget->count();
 
-        for(int i = 0; i < itemsList; i++) {
+        for(int i = 0; i < itemsList; i++){
             allItemsAsAList << ui->listWidget->item(i)->text();
         }
-
         foreach(QString itemsToDelete,allItemsAsAList){
             QFile::remove(itemsToDelete);
         }
-
         ui->listWidget->clear();
         ui->listWidget->addItem("All item successfully removed");
     }
 }
 
-void MainWindow::on_actionAbout_triggered() {
+void MainWindow::on_actionAbout_triggered(){
     stopMouseMovement = true;
     aboutDialog = new AboutDialog();
     aboutDialog->setWindowFlags(Qt::FramelessWindowHint|Qt::WindowSystemMenuHint|Qt::WindowMinimizeButtonHint|Qt::WindowMaximizeButtonHint);
     aboutDialog->exec();
 }
 
-void MainWindow::on_actionClose_triggered() {
-
+void MainWindow::on_actionClose_triggered(){
     qApp->quit();
 }
 
-void MainWindow::displayInfectedFiles(QString files) {
-
+void MainWindow::displayInfectedFiles(QString files){
     QString infectedFiles = files;
     ui->listWidget->addItem(infectedFiles);
 }
 
-void MainWindow::on_actionMinimize_triggered() {
-
+void MainWindow::on_actionMinimize_triggered(){
    stopMouseMovement = true;
    MainWindow::showMinimized();
 }
 
-void MainWindow::on_actionOptions_triggered() {
-
+void MainWindow::on_actionOptions_triggered(){
     stopMouseMovement = true;
     optionsDialog = new OptionsDialog();
     optionsDialog->setWindowFlags(Qt::FramelessWindowHint);
     optionsDialog->exec();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event) {
-
+void MainWindow::mousePressEvent(QMouseEvent *event){
     stopMouseMovement = false;
     m_nMouseClick_X_Coordinate = event->x();
     m_nMouseClick_Y_Coordinate = event->y();
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
     if (stopMouseMovement){
         return;
     }else{
-
     move(event->globalX()-m_nMouseClick_X_Coordinate,event->globalY()-m_nMouseClick_Y_Coordinate);
     }
 }
 
-
-void MainWindow::on_removeSelectedFile_released() {
-
+void MainWindow::on_removeSelectedFile_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_removeAllFiles_released() {
-
+void MainWindow::on_removeAllFiles_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_abort_released() {
-
+void MainWindow::on_abort_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_smartScanButton_released() {
-
+void MainWindow::on_smartScanButton_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_scanSingleFile_released() {
-
+void MainWindow::on_scanSingleFile_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_scanDirectory_released() {
-
+void MainWindow::on_scanDirectory_released(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_actionOptions_hovered() {
-
+void MainWindow::on_actionOptions_hovered(){
    stopMouseMovement = true;
 }
 
-void MainWindow::on_actionAbout_hovered() {
-
+void MainWindow::on_actionAbout_hovered(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_actionMinimize_hovered() {
-
+void MainWindow::on_actionMinimize_hovered(){
     stopMouseMovement = true;
 }
 
-void MainWindow::on_actionClose_hovered() {
-
+void MainWindow::on_actionClose_hovered(){
     stopMouseMovement = true;
 }
 
